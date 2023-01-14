@@ -9,12 +9,15 @@ console.log("Private key: " + privateKeyStr)
 
 // Generate public key
 var publicKey = secp.getPublicKey(privateKey) // Uint8Array
-var publicKeyStr = secp.utils.bytesToHex(publicKey) // str
-console.log("Public key: " + publicKeyStr)
+var preformatPublicKey = publicKey.slice(1)
+var preformatHashPublicKey = keccak224(preformatPublicKey)
+var address = preformatHashPublicKey.slice(-20)
+console.log("Address: " + toHex(address))
 
 // Convert public key to an ETH equivalent
-var hashedPubKey = toHex(keccak224(publicKey))
-console.log("Public key: " + hashedPubKey)
+// var publicKeyPreFormat = publicKeyStr.slice(1)
+// var formattedPubKey = keccak224(publicKeyPreFormat).slice(-20)
+// console.log("Formatted public key: " + formattedPubKey)
 
 // Create new transaction message
 const newTransaction = { 
@@ -37,9 +40,5 @@ signMessage(msgHash).then(
     (err) => alert(err)
 )
 
-// const signature = signMessage(msgHash).resolve()
-// console.log("Signature: " + signature)
-// const isVerified = secp.verify(signature[0], msgHash, publicKey)
-// console.log("isVerified: " + isVerified)
 
 
